@@ -1,7 +1,3 @@
-
-Insert Code
-Run
-Copy code
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +17,7 @@ Copy code
             margin: 0;
             overflow: hidden;
             text-align: center;
-            padding: 20px; /* Add padding for smaller devices */
+            padding: 10px; /* Add padding for smaller devices */
         }
         .channel-buttons {
             margin-bottom: 20px;
@@ -59,7 +55,7 @@ Copy code
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px #00ff00; /* Glowing effect */
-            width: auto; /* Full width for responsiveness */
+            width: 100%; /* Full width for responsiveness */
             max-width: 400px; /* Maximum width for larger screens */
             height: auto;
             display: none; /* Hidden by default */
@@ -117,7 +113,14 @@ Copy code
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        @media (max-width: 600px) {
+            .register-container {
+                width: 90%; /* Use a larger percentage for smaller screens */
+                max-width: none; /* Remove max-width for better responsiveness */
+            }
+        }
     </style>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -176,6 +179,11 @@ Copy code
 </div>
 
 <script>
+    // Initialize EmailJS with your User ID
+    (function(){
+        emailjs.init("OLnl-u_cG7ahqfLwD"); // Your User ID
+    })();
+
     // Show the registration form after the user clicks the DONE button
     document.getElementById('doneButton').addEventListener('click', () => {
         document.querySelector('.channel-buttons').style.display = 'none'; // Hide the buttons
@@ -200,8 +208,8 @@ Copy code
 
             // Prepare email content
             const emailContent = {
-                service_id: 'service_4a184qm', // Replace with your EmailJS service ID
-                template_id: 'template_640qmj4', // Replace with your EmailJS template ID
+                service_id: 'service_z0liqzu', // Replace with your EmailJS service ID
+                template_id: 'template_4tzqv54', // Replace with your EmailJS template ID
                 user_id: 'OLnl-u_cG7ahqfLwD', // Your User ID
                 template_params: {
                     whatsapp: whatsapp,
@@ -215,8 +223,12 @@ Copy code
             // Send the email using EmailJS
             emailjs.send(emailContent.service_id, emailContent.template_id, emailContent.template_params, emailContent.user_id)
                 .then(() => {
-                    // Show success message
+                    // Show success message and fade out loading message
                     alert('Registration successful! Your details have been sent.');
+                    document.getElementById('loadingMessage').style.opacity = 0; // Fade out effect
+                    setTimeout(() => {
+                        document.getElementById('loadingMessage').style.display = 'none'; // Hide after fade out
+                    }, 1000); // Wait for 1 second before hiding
                 })
                 .catch((error) => {
                     alert('Failed to send registration details. Please try again later.');
