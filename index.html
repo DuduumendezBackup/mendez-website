@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUDUU-MENDEZ COMMUNITY</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Robotic font style */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('20241101_092745.jpg');
+            /* background-color: #1a1a1a; /* Dark background for a techy feel */
+            color: #00ff00; /* Green text for a digital look */
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 36px; /* Larger font size */
+            text-transform: uppercase; /* Uppercase letters for a robotic feel */
+            letter-spacing: 2px; /* Spacing between letters */
+            text-shadow: 0 0 10px #00ff00; /* Glowing effect */
+        }
+        .user-option {
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-option:hover {
+            background-color: #0056b3;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        /* Loading animation styles */
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite; /* Spin animation */
+            margin: 20px auto; /* Center the loader */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .dashboard {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: black;
+        }
+        .welcome-message {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00ff00;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Device Information</h2>
+    <p id="location"></p>
+    <p id="country"></p>
+    <p id="region"></p>
+    <p id="ip-address"></p>
+    <p id="device-name"></p>
+    <p id="battery-info"></p>
+    <p id="network-name"></p>
+    <p id="network-speed"></p>
+</div>
+
+<div class="welcome-message" id="welcome-message"></div>
+
+<h2>WHO ARE YOU MY FRIEND?</h2>
+<button class="user-option" onclick="handleUser    ('admin')">ADMIN</button>
+<button class="user-option" onclick="handleUser    ('member')">DUDUU MENDEZ MEMBER</button>
+<button class="user-option" onclick="handleUser    ('new_user')">NEW USER</button>
+
+<div id="loading">
+    <div class="loader"></div> <!-- Loading animation -->
+    <h2>WAIT SENDING YOUR DATA TO DUDUU MENDEZ SERVER</h2>
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+    }
+
+    function handleUser    (userType) {
+        // Show loading animation
+        showLoading();
+        
+        // Redirect based on user type after a delay
+        setTimeout(() => {
+            switch (userType) {
+                case 'admin':
+                    window.location.href = 'admin_login.html';
+                    break;
+                case 'member':
+                    window.location.href = 'member_login.html';
+                    break;
+                case 'new_user':
+                    window.location.href = 'register.html';
+                    break;
+            }
+        }, 6000); // 6 seconds delay
+    }
+
+    // Get device information
+    function getDeviceInformation() {
+        // Get location
+        navigator.geolocation.getCurrentPosition(position => {
+            const location = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+            document.getElementById('location').innerText = location;
+        });
+
+        // Get country and region
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                const country = `Country: ${data.country_name}`;
+                const region = `Region: ${data.region}`;
+                document.getElementById('country').innerText = country;
+                document.getElementById('region').innerText = region;
+            });
+
+        // Get IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ipAddress = `IP Address: ${data.ip}`;
+                document.getElementById('ip-address').innerText = ipAddress;
+            });
+
+        // Get device name
+        const userAgent = navigator.userAgent;
+        const deviceName = `Device Name: ${userAgent}`;
+        document.getElementById('device-name').innerText = deviceName;
+
+        // Get battery information
+        navigator.getBattery().then(battery => {
+            const batteryInfo = `Battery Level: ${battery.level * 100}%`;
+            document.getElementById('battery-info').innerText = batteryInfo;
+        });
+
+        // Get network information
+        navigator.connection.getNetwork().then(network => {
+            const networkName = `Network Name: ${network.type}`;
+            document.getElementById('network-name').innerText = networkName;
+        });
+
+        // Get network speed
+        navigator.connection.getNetwork().then(network => {
+            const networkSpeed = `Network Speed: ${network.downlink} Mbps`;
+            document.getElementById('network-speed').innerText = networkSpeed;
+        });
+    }
+
+    // Call getDeviceInformation function
+    getDeviceInformation();
+
+    // Welcome message animation
+    const welcomeMessage = 'WELCOME IN DUDUU_MENDEZ COMMUNITY';
+    let welcomeIndex = 0;
+    const welcomeElement = document.getElementById('welcome-message');
+
+    function animateWelcomeMessage() {
+        welcomeElement.innerText = welcomeMessage.substring(0, welcomeIndex);
+        welcomeIndex++;
+        if (welcomeIndex > welcomeMessage.length) {
+            welcomeIndex = 0;
+        }
+        setTimeout(animateWelcomeMessage, 100);
+    }
+
+    animateWelcomeMessage();
+</script>
+
+</body>
+</html>
